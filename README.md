@@ -1,10 +1,11 @@
 # Insert READ ME instructions
 1. in Oracle Virtual Box
 
-- sudo apt update
-- sudo apt install python3-venv
-python3 -m venv venv
-source venv/bin/activate
+- open ubuntu wsl terminal
+- type sudo apt update
+- type sudo apt install python3-venv
+- type python3 -m venv venv
+- type source venv/bin/activate
 
 - sudo apt install git
 
