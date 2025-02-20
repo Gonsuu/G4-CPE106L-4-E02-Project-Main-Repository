@@ -14,6 +14,7 @@ class Customer:
         menu.print_menu()
 
     def place_order(self, menu):
+        menu.print_menu()
         while True:
             try:
                 tag = int(input("\nEnter (#) number of the item to add (0 to finish order): "))
