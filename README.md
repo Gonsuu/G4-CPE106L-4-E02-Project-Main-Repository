@@ -1,22 +1,66 @@
-# Insert READ ME instructions
-1. in Oracle Virtual Box
+**Quick Eats - Sprint 1 Setup Instructions**
 
-- open ubuntu wsl terminal
-- type sudo apt update
-- type sudo apt install python3-venv
-- type python3 -m venv venv
-- type source venv/bin/activate
+//These commands are executed in the Ubuntu WSL terminal
 
-- sudo apt install git
+### **1. Update System Packages**
+Before installing anything, ensure your system is up to date:
 
-- cd ~
+type: sudo apt update
 
-- git clone https://github.com/Gonsuu/G4-CPE106L-4-E02-Project-Main-Repository
+### **2. Install Python and Virtual Environment**
+Ensure Python are installed:
 
-- cd G4-CPE106L-4-E02-Project-Main-Repository
+type: sudo apt install python3
 
-- pwd
+### **3. Create and Activate Virtual Environment**
+Navigate to your home directory and set up a virtual environment:
 
-- cd Sprint01
+type:  cd ~ #call directory
+       python3  -m venv venv
+       source venv/bin/activate #activate venv
 
-- python3 main.py
+### **4. Install Git (If Not Installed)**
+Check if Git is installed:
+
+type:  git --version
+
+If not, install it:
+
+type:  sudo apt install git
+
+### **5. Clone the GitHub Repository**
+Download the project from GitHub:
+
+type: git clone https://github.com/Gonsuu/G4-CPE106L-4-E02-Project-Main-Repository
+
+
+### **6. Navigate to the Project Directory**
+
+type: cd G4-CPE106L-4-E02-Project-Main-Repository/Sprint01
+
+Verify you're in the correct folder:
+
+type:  pwd
+
+Expected output:
+
+/home/your-ubuntu-username/G4-CPE106L-4-E02-Project-Main-Repository/Sprint01
+
+
+### **7. Run the Application**
+
+//You must be in the Sprint01 directory to execute this
+type:  python3 main.py
+
+### **9. Run Unit Tests**
+To verify that everything works correctly, run:
+
+type: python3 <unit-test-filename.py>
+
+### **Additional Notes**
+- Ensure **Ubuntu WSL is installed** and running inside **Oracle VirtualBox**.
+- If you encounter **permission issues**, try:
+  
+  sudo chmod -R 755 G4-CPE106L-4-E02-Project-Main-Repository
+  
+- If you get **"command not found" errors**, ensure Python and Git are installed properly.
