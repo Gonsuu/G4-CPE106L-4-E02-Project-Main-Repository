@@ -1,5 +1,5 @@
 import random
-from order import Order
+from modules.order import Order
 
 class Customer:
     def __init__(self, name):
