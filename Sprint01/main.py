@@ -1,5 +1,5 @@
-from modules customer import Customer
-from menu import Menu
+from modules.customer import Customer
+from modules.menu import Menu
 
 # Initialize menu
 menu = Menu()
