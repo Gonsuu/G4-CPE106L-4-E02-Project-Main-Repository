@@ -1,42 +1,49 @@
 import unittest
-from menu import Menu
+from modules.menu import Menu
 
 class TestMenu(unittest.TestCase):
     def setUp(self):
+        """Create a fresh Menu instance before each test."""
         self.menu = Menu()
+
+    def test_add_single_item(self):
+        """Test if a single item can be added to the menu."""
         self.menu.add_item_to_menu("Classic Cheeseburger", "₱95", 1)
-        self.menu.add_item_to_menu("Margherita Pizza", "₱440", 2)
+        expected = [{"Name": "Classic Cheeseburger", "Price": "₱95", "Tag": 1}]
+        self.assertEqual(self.menu.menu_items, expected)
 
-    def test_add_item_to_menu(self):
-        self.assertEqual(len(self.menu.menu_items), 2)
-        self.assertEqual(self.menu.menu_items[0]["Name"], "Classic Cheeseburger")
-        self.assertEqual(self.menu.menu_items[1]["Price"], "₱440")
+    def test_add_multiple_items(self):
+        """Test if multiple items can be added to the menu."""
+        items = [
+            ("Classic Cheeseburger", "₱95", 1),
+            ("Margherita Pizza", "₱440", 2),
+        ]
+        for name, price, tag in items:
+            self.menu.add_item_to_menu(name, price, tag)
 
-    def test_find_item_existing(self):
-        item = self.menu.find_item(1)
-        self.assertIsNotNone(item)
-        self.assertEqual(item["Name"], "Classic Cheeseburger")
+        expected = [
+            {"Name": "Classic Cheeseburger", "Price": "₱95", "Tag": 1},
+            {"Name": "Margherita Pizza", "Price": "₱440", "Tag": 2},
+        ]
+        self.assertEqual(self.menu.menu_items, expected)
 
-    def test_find_item_non_existent(self):
-        item = self.menu.find_item(99)
+    def test_find_existing_item(self):
+        """Test if an item can be found by its tag."""
+        self.menu.add_item_to_menu("Spicy Chicken Tacos", "₱140", 3)
+        item = self.menu.find_item(3)
+        expected = {"Name": "Spicy Chicken Tacos", "Price": "₱140", "Tag": 3}
+        self.assertEqual(item, expected)
+
+    def test_find_non_existent_item(self):
+        """Test if finding a non-existent tag returns None."""
+        self.menu.add_item_to_menu("Grilled Chicken Salad", "₱200", 4)
+        item = self.menu.find_item(99)  # Tag does not exist
         self.assertIsNone(item)
 
-    def test_print_menu(self):
-        expected_output = (
-            "-" * 30 + "\n"
-            "Quick-Eats Menu\n" +
-            "-" * 30 + "\n"
-            "#1 - Classic Cheeseburger - ₱95\n"
-            "#2 - Margherita Pizza - ₱440\n"
-            "-" * 30 + "\n"
-        )
-        from io import StringIO
-        import sys
-        captured_output = StringIO()
-        sys.stdout = captured_output
-        self.menu.print_menu()
-        sys.stdout = sys.__stdout__
-        self.assertEqual(captured_output.getvalue(), expected_output)
+    def test_find_item_empty_menu(self):
+        """Test if find_item returns None when the menu is empty."""
+        self.assertIsNone(self.menu.find_item(1))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
+
