@@ -1,4 +1,4 @@
-from customer import Customer
+from modules customer import Customer
 from menu import Menu
 
 # Initialize menu
