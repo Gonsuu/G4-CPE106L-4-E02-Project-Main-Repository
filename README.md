@@ -52,7 +52,7 @@ Expected output:
 //You must be in the Sprint01 directory to execute this
 type:  python3 main.py
 
-### **9. Run Unit Tests**
+### **8. Run Unit Tests**
 To verify that everything works correctly, run:
 
 type: python3 <unit-test-filename.py>
