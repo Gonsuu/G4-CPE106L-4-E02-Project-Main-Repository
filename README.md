@@ -15,7 +15,7 @@ type: sudo apt install python3
 ### **3. Create and Activate Virtual Environment**
 Navigate to your home directory and set up a virtual environment:
 
-type:  cd ~ #call directory
+type:  cd ~ #call directory <br>
        python3  -m venv venv
        source venv/bin/activate #activate venv
 
