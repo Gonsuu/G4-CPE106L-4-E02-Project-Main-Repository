@@ -1,7 +1,7 @@
 # base modules
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.textfield import MDTextField
@@ -24,10 +24,19 @@ from menu_module import MenuScreen
 
 class QuickEatsApp(MDApp):
     def build(self):
-        self.screen = Screen()  # Assign the Screen object to self.screen
+        self.screen_manager = ScreenManager()
 
-        #self.theme_cls.primary_palette = "Green"
+        self.main_screen = Screen(name="main")
+        self.menu_screen = MenuScreen(name="menu")
 
+        self.screen_manager.add_widget(self.main_screen)
+        self.screen_manager.add_widget(self.menu_screen)
+
+        self.init_main_screen()
+
+        return self.screen_manager
+
+    def init_main_screen(self):
         # Create top box for logo and app name using RelativeLayout
         top_box = RelativeLayout(
             size_hint=(1, 0.2),
@@ -44,7 +53,6 @@ class QuickEatsApp(MDApp):
 
         top_box.add_widget(logo)
 
-        # Add the app name over the image
         #app_name = MDLabel(
             #text='Quick Eats',
             #halign='center',
@@ -68,7 +76,7 @@ class QuickEatsApp(MDApp):
             text='Enter Admin', pos_hint={'center_x': 0.5, 'center_y': 0.6},
             on_release=self.enter_admin_role,
             theme_text_color="Custom",
-            md_bg_color = 'white',
+            md_bg_color='white',
             text_color=(0.5, 0.25, 0, 1)  # Brown color
         )
         self.customer_button = MDRaisedButton(
@@ -79,7 +87,7 @@ class QuickEatsApp(MDApp):
             text_color=(0.5, 0.25, 0, 1)  # Brown color
         )
 
-        self.Info_button = MDRaisedButton(
+        self.info_button = MDRaisedButton(
             text='Information', pos_hint={'center_x': 0.5, 'center_y': 0},
             on_release=self.enter_info_role,
             theme_text_color="Custom",
@@ -89,17 +97,11 @@ class QuickEatsApp(MDApp):
 
         button_box.add_widget(self.admin_button)
         button_box.add_widget(self.customer_button)
-        button_box.add_widget(self.Info_button)
+        button_box.add_widget(self.info_button)
 
-        # Add the boxes to the screen
-        self.screen.add_widget(top_box)
-        self.screen.add_widget(button_box)
-
-        return self.screen
-
-    def _update_rect(self, instance, value):
-        self.rect.pos = instance.pos
-        self.rect.size = instance.size
+        # Add the boxes to the main screen
+        self.main_screen.add_widget(top_box)
+        self.main_screen.add_widget(button_box)
 
     def enter_admin_role(self, obj):
         self.enter_role(obj, role='admin')
@@ -111,18 +113,18 @@ class QuickEatsApp(MDApp):
         self.info_role(obj, role='information')
 
     def info_role(self, obj, role):
-        self.screen.clear_widgets()
+        self.main_screen.clear_widgets()
         # Insert group project information
 
     def enter_role(self, obj, role):
-        self.screen.clear_widgets()
+        self.main_screen.clear_widgets()
 
         if role == 'admin':
             self.username_layout = Builder.load_string(admin_helper)
         else:
             self.username_layout = Builder.load_string(customer_helper)
 
-        self.screen.add_widget(self.username_layout)
+        self.main_screen.add_widget(self.username_layout)
 
         button = MDRaisedButton(
             text='Log in',
@@ -132,7 +134,7 @@ class QuickEatsApp(MDApp):
             md_bg_color='white',
             text_color=(0.2, 0.1, 0, 1),
         )
-        self.screen.add_widget(button)
+        self.main_screen.add_widget(button)
 
     def show_data(self, obj, role):
         username_field = self.username_layout.ids.username
@@ -140,7 +142,7 @@ class QuickEatsApp(MDApp):
             continue_button = MDRaisedButton(text='Continue',
                                              on_release=self.close_dialog,
                                              theme_text_color="Custom",
-                                             md_bg_color = 'white',
+                                             md_bg_color='white',
                                              text_color=(0.2, 0.1, 0, 1)
                                              )
             check_string = 'Please enter a name'
@@ -155,7 +157,7 @@ class QuickEatsApp(MDApp):
             continue_button = MDRaisedButton(text='Continue',
                                              on_release=self.close_dialog,
                                              theme_text_color="Custom",
-                                             md_bg_color = 'white',
+                                             md_bg_color='white',
                                              text_color=(0.2, 0.1, 0, 1)
                                              )
             check_string = 'Please enter a password'
@@ -188,16 +190,11 @@ class QuickEatsApp(MDApp):
 
         instructions_layout = create_instructions2(user_name, role, handlers)
 
-        self.screen.clear_widgets()  # Clear all widgets after continue
-        self.screen.add_widget(instructions_layout)
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.menu_screen = MenuScreen(self)  # Pass self (QuickEatsApp instance) to MenuScreen
+        self.main_screen.clear_widgets()  # Clear all widgets after continue
+        self.main_screen.add_widget(instructions_layout)
 
     def show_menu(self, obj):
-        self.screen.clear_widgets()  # Clear current screen
-        self.screen.add_widget(self.menu_screen)  # Display the menu
+        self.screen_manager.current = "menu"  # Switch to menu screen
 
     def place_order(self, obj):
         print("Place / Add an Order")
@@ -217,5 +214,6 @@ class QuickEatsApp(MDApp):
     def quit_program(self, obj):
         print("Quit The Program")
         return
+
 
 QuickEatsApp().run()
