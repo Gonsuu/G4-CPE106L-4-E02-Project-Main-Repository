@@ -197,7 +197,7 @@ class QuickEatsApp(MDApp):
         self.screen_manager.current = "menu"  # Switch to menu screen
 
     def place_order(self, obj):
-        print("Place / Add an Order")
+        self.screen_manager.current = "menu"  # Switch to menu screen
 
     def order_summary(self, obj):
         print("Order Summary")
@@ -213,7 +213,7 @@ class QuickEatsApp(MDApp):
 
     def quit_program(self, obj):
         print("Quit The Program")
-        return
+        self.stop()
 
 
 QuickEatsApp().run()
