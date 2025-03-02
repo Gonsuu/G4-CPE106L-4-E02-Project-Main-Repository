@@ -14,6 +14,7 @@ from helpers import customer_helper
 from helpers import admin_helper
 from menu_module import MenuScreen
 from selected_item_screen import SelectedItemScreen
+from order_summary_screen import OrderSummaryScreen
 
 
 class QuickEatsApp(MDApp):
@@ -23,10 +24,12 @@ class QuickEatsApp(MDApp):
         self.main_screen = Screen(name="main")
         self.menu_screen = MenuScreen(name="menu")
         self.selected_item_screen = SelectedItemScreen(name="selected_item")
+        self.order_summary_screen = OrderSummaryScreen(name="order_summary")
 
         self.screen_manager.add_widget(self.main_screen)
         self.screen_manager.add_widget(self.menu_screen)
         self.screen_manager.add_widget(self.selected_item_screen)
+        self.screen_manager.add_widget(self.order_summary_screen)
 
         self.init_main_screen()
 
@@ -196,7 +199,7 @@ class QuickEatsApp(MDApp):
         self.screen_manager.current = "menu"  # Switch to menu screen
 
     def order_summary(self, obj):
-        print("Order Summary")
+        self.screen_manager.current = "order_summary"
 
     def remove_item(self, obj):
         print("Remove Item From Order")
