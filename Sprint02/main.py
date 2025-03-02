@@ -1,25 +1,19 @@
 # base modules
 from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.textfield import MDTextField
-from kivymd.uix.label import MDLabel, MDIcon
-from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDRaisedButton
-from kivy.core.text import Label
-import os
 
 # local modules
-from instructions_module import create_instructions
 from Instructionscrap import create_instructions2
 from helpers import customer_helper
 from helpers import admin_helper
 from menu_module import MenuScreen
+from selected_item_screen import SelectedItemScreen
 
 
 class QuickEatsApp(MDApp):
@@ -28,9 +22,11 @@ class QuickEatsApp(MDApp):
 
         self.main_screen = Screen(name="main")
         self.menu_screen = MenuScreen(name="menu")
+        self.selected_item_screen = SelectedItemScreen(name="selected_item")
 
         self.screen_manager.add_widget(self.main_screen)
         self.screen_manager.add_widget(self.menu_screen)
+        self.screen_manager.add_widget(self.selected_item_screen)
 
         self.init_main_screen()
 
