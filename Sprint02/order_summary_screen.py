@@ -42,5 +42,10 @@ class OrderSummaryScreen(Screen):
         order_item = OneLineListItem(text=f"{item['name']} - {item['price']}")
         self.list_view.add_widget(order_item)
 
+    def remove_selected_item(self, item):
+        if item in self.order:
+            self.order.remove(item)
+            self.update_order(self.order)
+
     def return_to_main(self, instance):
         self.manager.current = 'main'
