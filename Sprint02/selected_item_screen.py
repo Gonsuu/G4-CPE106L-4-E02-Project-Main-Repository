@@ -43,12 +43,17 @@ class SelectedItemScreen(Screen):
         self.selected_item = None
 
     def update_item(self, item):
+        """Update UI with the selected item."""
         self.selected_item = item
         self.item_name.text = item["name"]
         self.item_price.text = f"Price: {item['price']}"
         self.image.source = "C:/Users/itski/Desktop/Git-Projects/PythonProject/Image/QELogo.jpg"
 
     def confirm_add_to_order(self, instance):
+        """Show confirmation dialog before adding to order."""
+        if not self.selected_item:
+            return
+
         if not self.dialog:
             self.dialog = MDDialog(
                 title="Confirm Order",
@@ -61,11 +66,24 @@ class SelectedItemScreen(Screen):
         self.dialog.open()
 
     def dismiss_dialog(self, instance):
+        """Dismiss confirmation dialog."""
         self.dialog.dismiss()
 
     def add_to_order(self, instance):
-        self.manager.get_screen("order_summary").add_item_to_order(self.selected_item)
+        """Add item to order and update order summary screen."""
+        if not self.selected_item:
+            return
+
+        order_summary_screen = self.manager.get_screen("order_summary")
+
+        if hasattr(order_summary_screen, "add_item_to_order"):
+            order_summary_screen.add_item_to_order(self.selected_item)
+            print(f"Added to order: {self.selected_item['name']} - {self.selected_item['price']}")
+        else:
+            print("Error: OrderSummaryScreen does not have add_item_to_order method!")
+
         self.dialog.dismiss()
 
     def go_back(self, instance):
+        """Return to menu screen."""
         self.manager.current = "menu"
