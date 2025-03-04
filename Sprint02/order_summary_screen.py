@@ -56,7 +56,7 @@ class OrderSummaryScreen(Screen):
             self.list_view.add_widget(order_item)
 
     def submit_order(self, instance):
-        """Send orders to database and go to Submit Order Screen."""
+        """Submit orders to the database."""
         if not self.orders:
             dialog = MDDialog(
                 title="Error",
@@ -67,7 +67,18 @@ class OrderSummaryScreen(Screen):
             return
 
         for item in self.orders:
-            insert_order(item["name"], item["price"])  # Send order to DB
+            item_name = item['name']
+
+            # Remove currency symbol and convert to float
+            price_str = item['price'].replace('₱', '').strip()
+            try:
+                price = float(price_str)  # Convert price string to float
+            except ValueError:
+                print(f"Invalid price format: {item['price']}")
+                continue  # Skip this item if conversion fails
+
+            # Insert into the database
+            insert_order(item_name, price)
 
         dialog = MDDialog(
             title="Success",
