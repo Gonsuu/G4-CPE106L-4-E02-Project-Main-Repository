@@ -16,7 +16,7 @@ from menu_module import MenuScreen
 from selected_item_screen import SelectedItemScreen
 from order_summary_screen import OrderSummaryScreen
 from remove_item_screen import RemoveItemFromOrder
-
+from submit_order_screen import SubmitOrderScreen
 
 class QuickEatsApp(MDApp):
     def build(self):
@@ -27,12 +27,14 @@ class QuickEatsApp(MDApp):
         self.selected_item_screen = SelectedItemScreen(name="selected_item")
         self.order_summary_screen = OrderSummaryScreen(name="order_summary")
         self.remove_item_screen = RemoveItemFromOrder(name="remove_item")
+        self.submit_order_screen = SubmitOrderScreen(name="submit_order")
 
         self.screen_manager.add_widget(self.main_screen)
         self.screen_manager.add_widget(self.menu_screen)
         self.screen_manager.add_widget(self.selected_item_screen)
         self.screen_manager.add_widget(self.order_summary_screen)
         self.screen_manager.add_widget(self.remove_item_screen)
+        self.screen_manager.add_widget(self.submit_order_screen)
 
         self.init_main_screen()
 
@@ -130,7 +132,7 @@ class QuickEatsApp(MDApp):
 
         button = MDRaisedButton(
             text='Log in',
-            pos_hint={'center_x': 0.5, 'center_y': 0.4},
+            pos_hint={'center_x': 0.5, 'center_y': 0.2},
             on_release=lambda x: self.show_data(x, role=role),
             theme_text_color="Custom",
             md_bg_color='white',
@@ -202,13 +204,37 @@ class QuickEatsApp(MDApp):
         self.screen_manager.current = "menu"  # Switch to menu screen
 
     def order_summary(self, obj):
-        self.screen_manager.current = "order_summary"
+        if not self.order_summary_screen.orders:
+            dialog = MDDialog(
+                title="Order Summary",
+                text="There are no orders listed.",
+                buttons=[
+                    MDRaisedButton(text="OK",
+                                   on_release=lambda x: dialog.dismiss()
+                                   )
+                ]
+            )
+            dialog.open()
+        else:
+            self.screen_manager.current = "order_summary"
 
     def remove_item(self, obj):
         self.screen_manager.current = "remove_item"
 
     def submit_order(self, obj):
-        print("Submit Your Order")
+        if not self.submit_order_screen.set_orders(self.order_summary_screen.orders):
+            dialog = MDDialog(
+                title="Submit Order",
+                text="There are no orders listed.",
+                buttons=[
+                    MDRaisedButton(text="OK",
+                                   on_release=lambda x: dialog.dismiss()
+                                   )
+                ]
+            )
+            dialog.open()
+        else:
+            self.screen_manager.current = "submit_order"
 
     def request_waiter(self, obj):
         print("Request Waiter for Manual Billing")
