@@ -5,7 +5,7 @@ from kivymd.uix.list import MDList, OneLineListItem
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
-
+from database import insert_order  # Import the database function
 
 class OrderSummaryScreen(Screen):
     def __init__(self, **kwargs):
@@ -56,7 +56,7 @@ class OrderSummaryScreen(Screen):
             self.list_view.add_widget(order_item)
 
     def submit_order(self, instance):
-        """Print the orders and go to Submit Order Screen."""
+        """Send orders to database and go to Submit Order Screen."""
         if not self.orders:
             dialog = MDDialog(
                 title="Error",
@@ -66,13 +66,20 @@ class OrderSummaryScreen(Screen):
             dialog.open()
             return
 
-        print("\nOrder Submitted:")
         for item in self.orders:
-            print(f"- {item['name']} - {item['price']}")
+            insert_order(item["name"], item["price"])  # Send order to DB
 
-        submit_screen = self.manager.get_screen("submit_order")
-        submit_screen.set_orders(self.orders)
-        self.manager.current = "submit_order"
+        dialog = MDDialog(
+            title="Success",
+            text="Order submitted successfully!",
+            buttons=[MDRaisedButton(text="OK", on_release=lambda x: dialog.dismiss())]
+        )
+        dialog.open()
+
+        self.orders.clear()  # Clear orders after submission
+        self.update_order_list()  # Refresh UI
+
+        self.manager.current = "submit_order"  # Switch to next screen
 
     def return_to_main(self, instance):
         self.manager.current = "main"
