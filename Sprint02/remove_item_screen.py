@@ -4,6 +4,7 @@ from kivymd.uix.list import MDList, OneLineListItem
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.label import MDLabel
+from kivymd.uix.dialog import MDDialog
 
 class RemoveItemFromOrder(Screen):
     def __init__(self, **kwargs):
@@ -25,6 +26,7 @@ class RemoveItemFromOrder(Screen):
             text="Complete Order",
             pos_hint={"center_x": 0.5},
             md_bg_color=(0.2, 0.6, 0.2, 1),
+            on_release=self.return_to_main
         )
 
         self.return_button = MDRaisedButton(
@@ -34,7 +36,6 @@ class RemoveItemFromOrder(Screen):
         )
 
         self.layout.add_widget(self.complete_order_button)
-        self.layout.add_widget(self.return_button)
         self.add_widget(self.layout)
 
     def set_orders(self, orders):
@@ -64,3 +65,6 @@ class RemoveItemFromOrder(Screen):
     def return_to_summary(self, instance):
         """ Go back to Order Summary screen """
         self.manager.current = 'order_summary'
+
+    def return_to_main(self, instance):
+        self.manager.current = 'main'
