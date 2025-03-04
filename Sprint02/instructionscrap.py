@@ -24,7 +24,6 @@ def create_instructions2(user_name, role, handlers):
     options = [
         ("Show Menu", "S"),
         ("Order Summary", "O"),
-        ("Submit Your Order", "T"),
         ("Request Waiter for Manual Billing", "W"),
         ("Quit The Program", "quit")
     ]
