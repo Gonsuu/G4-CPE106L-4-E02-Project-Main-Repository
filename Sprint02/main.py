@@ -135,17 +135,28 @@ class QuickEatsApp(MDApp):
         self.main_screen.add_widget(button)
 
     def show_data(self, obj, role):
-        username_field = self.username_layout.ids.username
-        password_field = self.username_layout.ids.password
+        if hasattr(self, "username_layout") and hasattr(self.username_layout, "ids"):
+            username_field = self.username_layout.ids.get("username")
+            password_field = self.username_layout.ids.get("password")
 
-        if username_field.text == "":
-            self.show_error_dialog('Please enter a name')
-        elif role == 'admin' and password_field.text == "":
-            self.show_error_dialog('Please enter a password')
-        elif role == 'admin' and username_field.text != "root" or password_field.text != "root123":
-            self.show_error_dialog('Invalid username or password')
+            if not username_field:
+                self.show_error_dialog('Username field not found!')
+                return
+
+            if role == "admin" and not password_field:
+                self.show_error_dialog('Password field not found!')
+                return
+
+            if username_field.text == "":
+                self.show_error_dialog('Please enter a name')
+            elif role == 'admin' and password_field.text == "":
+                self.show_error_dialog('Please enter a password')
+            elif role == 'admin' and (username_field.text != "root" or password_field.text != "root123"):
+                self.show_error_dialog('Invalid username or password')
+            else:
+                self.show_instructions(role)
         else:
-            self.show_instructions(role)
+            print("Error: username_layout or ids not found!")
 
     def show_error_dialog(self, message):
         continue_button = MDRaisedButton(
@@ -175,7 +186,10 @@ class QuickEatsApp(MDApp):
 
             handlers = {
                 "S": self.show_menu,
+                "P": self.place_order,
                 "O": self.order_summary,
+                "R": self.remove_item,
+                "T": self.submit_order,
                 "W": self.request_waiter,
                 "quit": self.quit_program
             }
@@ -244,5 +258,6 @@ class QuickEatsApp(MDApp):
     def quit_program(self, obj):
         print("Quit The Program")
         self.stop()
+
 
 QuickEatsApp().run()
