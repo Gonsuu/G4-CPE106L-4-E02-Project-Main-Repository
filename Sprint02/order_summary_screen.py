@@ -6,6 +6,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
 from database import insert_order  # Import the database function
+from remove_item_screen import RemoveItemFromOrder
 
 class OrderSummaryScreen(Screen):
     def __init__(self, **kwargs):
@@ -28,6 +29,13 @@ class OrderSummaryScreen(Screen):
             on_release=self.submit_order
         )
 
+        self.remove_button = MDRaisedButton(
+            text="Remove Order",
+            pos_hint={"center_x": 0.5},
+            md_bg_color = (0.2, 0.6, 0.2, 1),
+            on_release = self.remove_order
+        )
+
         self.return_button = MDRaisedButton(
             text="Back",
             pos_hint={"center_x": 0.5},
@@ -36,6 +44,7 @@ class OrderSummaryScreen(Screen):
 
         self.layout.add_widget(self.submit_button)
         self.layout.add_widget(self.return_button)
+        self.layout.add_widget(self.remove_button)
         self.add_widget(self.layout)
 
     def set_orders(self, orders):
@@ -91,6 +100,27 @@ class OrderSummaryScreen(Screen):
         self.update_order_list()  # Refresh UI
 
         self.manager.current = "submit_order"  # Switch to next screen
+
+    def remove_order(self, instance):
+        remove_screen = self.manager.get_screen("remove_item")
+        remove_screen.set_orders(self.orders)  # Pass orders to remove screen
+        self.manager.current = "remove_item"
+
+    def confirm_remove(self, item_instance):
+        """Remove the selected item from the list and update UI."""
+        item_text = item_instance.text
+        for item in self.orders:
+            if f"{item['name']} - {item['price']}" == item_text:
+                self.orders.remove(item)
+                break
+
+        self.update_order_list()
+        self.dialog.dismiss()
+
+    def update_order_summary_from_remove(self, updated_orders):
+        """Update order summary when items are removed in RemoveItemFromOrder."""
+        self.orders = updated_orders
+        self.update_order_list()
 
     def return_to_main(self, instance):
         self.manager.current = "main"
