@@ -18,6 +18,7 @@ from order_summary_screen import OrderSummaryScreen
 from remove_item_screen import RemoveItemFromOrder
 from submit_order_screen import SubmitOrderScreen
 from billing_screen import BillingScreen
+from admin_screen import AdminScreen  # Import the AdminScreen
 
 class QuickEatsApp(MDApp):
     def build(self):
@@ -30,6 +31,7 @@ class QuickEatsApp(MDApp):
         self.remove_item_screen = RemoveItemFromOrder(name="remove_item")
         self.submit_order_screen = SubmitOrderScreen(name="submit_order")
         self.billing_screen = BillingScreen(name="billing")
+        self.admin_screen = AdminScreen(name="admin")  # Create the AdminScreen
 
         self.screen_manager.add_widget(self.main_screen)
         self.screen_manager.add_widget(self.menu_screen)
@@ -38,6 +40,7 @@ class QuickEatsApp(MDApp):
         self.screen_manager.add_widget(self.remove_item_screen)
         self.screen_manager.add_widget(self.submit_order_screen)
         self.screen_manager.add_widget(self.billing_screen)
+        self.screen_manager.add_widget(self.admin_screen)  # Add the AdminScreen to the manager
 
         self.init_main_screen()
 
@@ -133,60 +136,54 @@ class QuickEatsApp(MDApp):
 
     def show_data(self, obj, role):
         username_field = self.username_layout.ids.username
+        password_field = self.username_layout.ids.password
+
         if username_field.text == "":
-            continue_button = MDRaisedButton(text='Continue',
-                                             on_release=self.close_dialog,
-                                             theme_text_color="Custom",
-                                             md_bg_color='white',
-                                             text_color=(0.2, 0.1, 0, 1)
-                                             )
-            check_string = 'Please enter a name'
-            self.dialog = MDDialog(
-                title='Welcome to Quick-Eats!',
-                text=check_string,
-                buttons=[continue_button],
-                background_color=[1, 1, 1, 1]  # dialog background to white
-            )
-            self.dialog.open()
-        elif role == 'admin' and self.username_layout.ids.password.text == "":
-            continue_button = MDRaisedButton(text='Continue',
-                                             on_release=self.close_dialog,
-                                             theme_text_color="Custom",
-                                             md_bg_color='white',
-                                             text_color=(0.2, 0.1, 0, 1)
-                                             )
-            check_string = 'Please enter a password'
-            self.dialog = MDDialog(
-                title='Welcome to Quick-Eats!',
-                text=check_string,
-                buttons=[continue_button],
-                background_color=[1, 1, 1, 1]  # dialog background to white
-            )
-            self.dialog.open()
+            self.show_error_dialog('Please enter a name')
+        elif role == 'admin' and password_field.text == "":
+            self.show_error_dialog('Please enter a password')
+        elif role == 'admin' and username_field.text != "root" or password_field.text != "root123":
+            self.show_error_dialog('Invalid username or password')
         else:
             self.show_instructions(role)
+
+    def show_error_dialog(self, message):
+        continue_button = MDRaisedButton(
+            text='Continue',
+            on_release=self.close_dialog,
+            theme_text_color="Custom",
+            md_bg_color='white',
+            text_color=(0.2, 0.1, 0, 1)
+        )
+        self.dialog = MDDialog(
+            title='Error',
+            text=message,
+            buttons=[continue_button],
+            background_color=[1, 1, 1, 1]  # dialog background to white
+        )
+        self.dialog.open()
 
     def close_dialog(self, obj):
         self.dialog.dismiss()
 
     def show_instructions(self, role):
-        username_field = self.username_layout.ids.username
-        user_name = username_field.text
+        if role == 'admin':
+            self.screen_manager.current = 'admin'
+        else:
+            username_field = self.username_layout.ids.username
+            user_name = username_field.text
 
-        handlers = {
-            "S": self.show_menu,
-            "P": self.place_order,
-            "O": self.order_summary,
-            "R": self.remove_item,
-            "T": self.submit_order,
-            "W": self.request_waiter,
-            "quit": self.quit_program
-        }
+            handlers = {
+                "S": self.show_menu,
+                "O": self.order_summary,
+                "W": self.request_waiter,
+                "quit": self.quit_program
+            }
 
-        instructions_layout = create_instructions2(user_name, role, handlers)
+            instructions_layout = create_instructions2(user_name, role, handlers)
 
-        self.main_screen.clear_widgets()  # Clear all widgets after continue
-        self.main_screen.add_widget(instructions_layout)
+            self.main_screen.clear_widgets()  # Clear all widgets after continue
+            self.main_screen.add_widget(instructions_layout)
 
     def show_menu(self, obj):
         self.screen_manager.current = "menu"  # Switch to menu screen
@@ -244,10 +241,8 @@ class QuickEatsApp(MDApp):
         else:
             self.screen_manager.current = "billing"
 
-
     def quit_program(self, obj):
         print("Quit The Program")
         self.stop()
-
 
 QuickEatsApp().run()
