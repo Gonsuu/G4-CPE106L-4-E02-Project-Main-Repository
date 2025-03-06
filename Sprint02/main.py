@@ -17,6 +17,7 @@ from selected_item_screen import SelectedItemScreen
 from order_summary_screen import OrderSummaryScreen
 from remove_item_screen import RemoveItemFromOrder
 from submit_order_screen import SubmitOrderScreen
+from billing_screen import BillingScreen
 
 class QuickEatsApp(MDApp):
     def build(self):
@@ -28,6 +29,7 @@ class QuickEatsApp(MDApp):
         self.order_summary_screen = OrderSummaryScreen(name="order_summary")
         self.remove_item_screen = RemoveItemFromOrder(name="remove_item")
         self.submit_order_screen = SubmitOrderScreen(name="submit_order")
+        self.billing_screen = BillingScreen(name="billing")
 
         self.screen_manager.add_widget(self.main_screen)
         self.screen_manager.add_widget(self.menu_screen)
@@ -35,13 +37,14 @@ class QuickEatsApp(MDApp):
         self.screen_manager.add_widget(self.order_summary_screen)
         self.screen_manager.add_widget(self.remove_item_screen)
         self.screen_manager.add_widget(self.submit_order_screen)
+        self.screen_manager.add_widget(self.billing_screen)
 
         self.init_main_screen()
 
         return self.screen_manager
 
     def init_main_screen(self):
-        # Create top box for logo and app name using RelativeLayout
+        # Create top box for logo and app name
         top_box = RelativeLayout(
             size_hint=(1, 0.2),
             pos_hint={'center_x': 0.5, 'top': 1},
@@ -51,29 +54,16 @@ class QuickEatsApp(MDApp):
         logo = Image(
             source='C:/Users/itski/Desktop/Git-Projects/PythonProject/Image/QELogo.jpg',
             size_hint=(None, None),
-            size=(300, 300),  # Adjust size as needed
-            pos_hint={'center_x': 0.5, 'center_y': 0}  # Center horizontally
+            size=(300, 300),
+            pos_hint={'center_x': 0.5, 'center_y': 0}
         )
 
         top_box.add_widget(logo)
 
-        #app_name = MDLabel(
-            #text='Quick Eats',
-            #halign='center',
-            #theme_text_color="Custom",
-            #text_color=(0.2, 0.1, 0, 1),  # Dark Brown color
-            #font_name = 'Roboto-Italic',
-            #font_style='H4',
-            #size_hint=(1, None),
-            #height = 50
-        #)
-
-        #top_box.add_widget(app_name)
-
-        # Create button box for background of the buttons
-        button_box = FloatLayout(
+        # Store button_box as an instance variable
+        self.button_box = FloatLayout(
             size_hint=(1, 0.4),
-            pos_hint={'center_x': 0.5, 'center_y': 0.5}  # Centers the layout
+            pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
 
         self.admin_button = MDRaisedButton(
@@ -81,14 +71,14 @@ class QuickEatsApp(MDApp):
             on_release=self.enter_admin_role,
             theme_text_color="Custom",
             md_bg_color='white',
-            text_color=(0.5, 0.25, 0, 1)  # Brown color
+            text_color=(0.5, 0.25, 0, 1)
         )
         self.customer_button = MDRaisedButton(
             text='Enter Customer', pos_hint={'center_x': 0.5, 'center_y': 0.3},
             on_release=self.enter_customer_role,
             theme_text_color="Custom",
             md_bg_color='white',
-            text_color=(0.5, 0.25, 0, 1)  # Brown color
+            text_color=(0.5, 0.25, 0, 1)
         )
 
         self.info_button = MDRaisedButton(
@@ -96,16 +86,17 @@ class QuickEatsApp(MDApp):
             on_release=self.enter_info_role,
             theme_text_color="Custom",
             md_bg_color='white',
-            text_color=(0.5, 0.25, 0, 1)  # Brown color
+            text_color=(0.5, 0.25, 0, 1)
         )
 
-        button_box.add_widget(self.admin_button)
-        button_box.add_widget(self.customer_button)
-        button_box.add_widget(self.info_button)
+        # Add buttons to button_box
+        self.button_box.add_widget(self.admin_button)
+        self.button_box.add_widget(self.customer_button)
+        self.button_box.add_widget(self.info_button)
 
-        # Add the boxes to the main screen
+        # Add to main screen
         self.main_screen.add_widget(top_box)
-        self.main_screen.add_widget(button_box)
+        self.main_screen.add_widget(self.button_box)
 
     def enter_admin_role(self, obj):
         self.enter_role(obj, role='admin')
@@ -237,7 +228,22 @@ class QuickEatsApp(MDApp):
             self.screen_manager.current = "submit_order"
 
     def request_waiter(self, obj):
-        print("Request Waiter for Manual Billing")
+        print("Request Waiter for Manual Billing has been processed, please wait.")
+
+        if not self.billing_screen:
+            dialog = MDDialog(
+                title="Order Summary",
+                text="There are no orders listed.",
+                buttons=[
+                    MDRaisedButton(text="OK",
+                                   on_release=lambda x: dialog.dismiss()
+                                   )
+                ]
+            )
+            dialog.open()
+        else:
+            self.screen_manager.current = "billing"
+
 
     def quit_program(self, obj):
         print("Quit The Program")
