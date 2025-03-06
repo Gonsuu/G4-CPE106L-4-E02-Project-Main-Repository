@@ -18,7 +18,8 @@ from order_summary_screen import OrderSummaryScreen
 from remove_item_screen import RemoveItemFromOrder
 from submit_order_screen import SubmitOrderScreen
 from billing_screen import BillingScreen
-from admin_screen import AdminScreen  # Import the AdminScreen
+from admin_screen import AdminScreen
+from database import generate_customer_id
 
 class QuickEatsApp(MDApp):
     def build(self):
@@ -184,6 +185,8 @@ class QuickEatsApp(MDApp):
             username_field = self.username_layout.ids.username
             user_name = username_field.text
 
+            customer_id = generate_customer_id()
+
             handlers = {
                 "S": self.show_menu,
                 "P": self.place_order,
@@ -198,6 +201,8 @@ class QuickEatsApp(MDApp):
 
             self.main_screen.clear_widgets()  # Clear all widgets after continue
             self.main_screen.add_widget(instructions_layout)
+
+            print(f"Customer {user_name} logged in with ID: {customer_id}")
 
     def show_menu(self, obj):
         self.screen_manager.current = "menu"  # Switch to menu screen
