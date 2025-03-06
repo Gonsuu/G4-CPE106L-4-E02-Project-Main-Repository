@@ -70,18 +70,9 @@ class SelectedItemScreen(Screen):
         self.dialog.dismiss()
 
     def add_to_order(self, instance):
-        """Add item to order and update order summary screen."""
-        if not self.selected_item:
-            return
-
+        """ Add the selected item to the order summary screen """
         order_summary_screen = self.manager.get_screen("order_summary")
-
-        if hasattr(order_summary_screen, "add_item_to_order"):
-            order_summary_screen.add_item_to_order(self.selected_item)
-            print(f"Added to order: {self.selected_item['name']} - {self.selected_item['price']}")
-        else:
-            print("Error: OrderSummaryScreen does not have add_item_to_order method!")
-
+        order_summary_screen.add_item_to_order(self.selected_item)
         self.dialog.dismiss()
 
     def go_back(self, instance):
