@@ -52,11 +52,11 @@ class AdminScreen(Screen):
 
         self.add_widget(layout)
 
-    def check_orders(self):
+    def check_orders(self, instance):
         # Implement the functionality to check orders
         print("Check Orders button clicked")
 
-    def order_lists(self):
+    def order_lists(self, instance):
         # Implement the functionality for order lists
         print("Order Lists button clicked")
 
