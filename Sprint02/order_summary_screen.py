@@ -12,6 +12,7 @@ class OrderSummaryScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.orders = []  # Store current orders
+        self.customer_name = "Guest"  # Default value (can be updated later)
 
         self.layout = BoxLayout(orientation="vertical", padding=10, spacing=10)
         self.title = MDLabel(text="Order Summary", halign="center", font_style="H5")
@@ -32,8 +33,8 @@ class OrderSummaryScreen(Screen):
         self.remove_button = MDRaisedButton(
             text="Remove Order",
             pos_hint={"center_x": 0.5},
-            md_bg_color = (0.2, 0.6, 0.2, 1),
-            on_release = self.remove_order
+            md_bg_color=(0.2, 0.6, 0.2, 1),
+            on_release=self.remove_order
         )
 
         self.return_button = MDRaisedButton(
@@ -47,9 +48,10 @@ class OrderSummaryScreen(Screen):
         self.layout.add_widget(self.remove_button)
         self.add_widget(self.layout)
 
-    def set_orders(self, orders):
+    def set_orders(self, orders, customer_name="Guest"):
         """Set the orders list and update the UI."""
         self.orders = orders
+        self.customer_name = customer_name  # Store customer name
         self.update_order_list()
 
     def add_item_to_order(self, item):
@@ -87,14 +89,14 @@ class OrderSummaryScreen(Screen):
                 continue  # Skip this item if conversion fails
 
             # Insert into the database
-            insert_order(item_name, price)
+            insert_order(self.customer_name, item_name, price)
 
-        dialog = MDDialog(
+        success_dialog = MDDialog(
             title="Success",
             text="Order submitted successfully!",
-            buttons=[MDRaisedButton(text="OK", on_release=lambda x: dialog.dismiss())]
+            buttons=[MDRaisedButton(text="OK", on_release=lambda x: success_dialog.dismiss())]
         )
-        dialog.open()
+        success_dialog.open()
 
         self.orders.clear()  # Clear orders after submission
         self.update_order_list()  # Refresh UI
@@ -115,7 +117,6 @@ class OrderSummaryScreen(Screen):
                 break
 
         self.update_order_list()
-        self.dialog.dismiss()
 
     def update_order_summary_from_remove(self, updated_orders):
         """Update order summary when items are removed in RemoveItemFromOrder."""
