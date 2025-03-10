@@ -5,6 +5,7 @@ from kivymd.uix.button import MDRaisedButton
 from kivy.uix.image import Image
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
+import os
 
 class SelectedItemScreen(Screen):
     def __init__(self, **kwargs):
@@ -47,7 +48,8 @@ class SelectedItemScreen(Screen):
         self.selected_item = item
         self.item_name.text = item["name"]
         self.item_price.text = f"Price: {item['price']}"
-        self.image.source = "C:/Users/itski/Desktop/Git-Projects/PythonProject/Image/QELogo.jpg"
+        item_image_path = os.path.join(os.path.dirname(__file__), "Image", item["image_filename"])
+        self.image.source = item_image_path
 
     def confirm_add_to_order(self, instance):
         """Show confirmation dialog before adding to order."""
