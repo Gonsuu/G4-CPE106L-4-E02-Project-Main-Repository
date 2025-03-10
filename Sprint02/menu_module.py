@@ -6,12 +6,15 @@ from kivymd.uix.list import ThreeLineAvatarIconListItem, ImageLeftWidget, MDList
 from kivymd.uix.button import MDRaisedButton
 from kivy.uix.scrollview import ScrollView
 from menu import Menu
+import os
 
 class MenuScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.menu = Menu()
-        logo_path = "C:/Users/itski/Desktop/Git-Projects/PythonProject/Image/QELogo.jpg" #Change by using import os and logo_path=source(etc...)
+
+        logo_filename = "QELogo.jpg"
+        logo_path = os.path.join(os.path.dirname(__file__), "Image", logo_filename)
 
         main_layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
@@ -47,7 +50,7 @@ class MenuScreen(Screen):
     def populate_menu(self):
         self.list_view.clear_widgets()
         for item in self.menu.get_menu_items():
-            item_image = ImageLeftWidget(source="C:/Users/itski/Desktop/Git-Projects/PythonProject/Image/QELogo.jpg") #Change by using import os and logo_path=source(etc...)
+            item_image = ImageLeftWidget(source=os.path.join(os.path.dirname(__file__), "Image", "QELogo.jpg"))
             menu_item = ThreeLineAvatarIconListItem(
                 text=item["name"],
                 secondary_text=f"Price: {item['price']}",
