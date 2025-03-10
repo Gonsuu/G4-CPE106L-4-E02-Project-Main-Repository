@@ -13,14 +13,6 @@ def create_instructions2(user_name, role, handlers):
         pos_hint={'center_x': 0.5, 'center_y': 0.5}
     )
 
-    #welcome_label = MDLabel(
-        #text=f"Welcome to Quick-Eats, {user_name}!",
-        #halign = 'center',
-        #pos_hint={'center_y':1},
-        #theme_text_color="Primary"
-    #)
-    #instructions_layout.add_widget(welcome_label)
-
     options = [
         ("Show Menu", "S"),
         ("Order Summary", "O"),
