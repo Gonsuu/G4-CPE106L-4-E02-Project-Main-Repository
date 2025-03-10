@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDRaisedButton
+from kivy.graphics import Rectangle, Color
 import os
 
 # local modules
@@ -49,6 +50,11 @@ class QuickEatsApp(MDApp):
         return self.screen_manager
 
     def init_main_screen(self):
+        with self.main_screen.canvas.before:
+            Color(0.1, 0.5, 0.1, 0.9)  # RGBA for maroon
+            self.rect = Rectangle(size=self.main_screen.size, pos=self.main_screen.pos)
+        self.main_screen.bind(size=self._update_rect, pos=self._update_rect)
+
         # Create top box for logo and app name
         top_box = RelativeLayout(
             size_hint=(1, 0.2),
@@ -109,6 +115,10 @@ class QuickEatsApp(MDApp):
         # Add to main screen
         self.main_screen.add_widget(top_box)
         self.main_screen.add_widget(self.button_box)
+
+    def _update_rect(self, *args):
+        self.rect.pos = self.main_screen.pos
+        self.rect.size = self.main_screen.size
 
     def enter_admin_role(self, obj):
         self.enter_role(obj, role='admin')
