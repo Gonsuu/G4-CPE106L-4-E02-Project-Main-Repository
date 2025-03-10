@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDRaisedButton
+import os
 
 # local modules
 from Instructionscrap import create_instructions2
@@ -54,9 +55,16 @@ class QuickEatsApp(MDApp):
             pos_hint={'center_x': 0.5, 'top': 1},
         )
 
+        # image path
+        base_dir = os.path.dirname(__file__)
+        image_dir = os.path.join(base_dir, "Image")
+        logo_filename = "QELogo.jpg"
+        logo_path = os.path.join(image_dir, logo_filename)
+
+
         # Add the image
         logo = Image(
-            source='C:/Users/itski/Desktop/Git-Projects/PythonProject/Image/QELogo.jpg',
+            source=logo_path,
             size_hint=(None, None),
             size=(300, 300),
             pos_hint={'center_x': 0.5, 'center_y': 0}
