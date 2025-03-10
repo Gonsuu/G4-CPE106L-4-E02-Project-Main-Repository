@@ -50,7 +50,9 @@ class MenuScreen(Screen):
     def populate_menu(self):
         self.list_view.clear_widgets()
         for item in self.menu.get_menu_items():
-            item_image = ImageLeftWidget(source=os.path.join(os.path.dirname(__file__), "Image", "QELogo.jpg"))
+            # Construct the image path for each menu item
+            item_image_path = os.path.join(os.path.dirname(__file__), "Image", item["image_filename"])
+            item_image = ImageLeftWidget(source=item_image_path)
             menu_item = ThreeLineAvatarIconListItem(
                 text=item["name"],
                 secondary_text=f"Price: {item['price']}",
