@@ -1,5 +1,5 @@
 from kivy.uix.screenmanager import Screen
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDRaisedButton
 from kivy.uix.image import Image
@@ -11,11 +11,11 @@ class SelectedItemScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.layout = BoxLayout(orientation="vertical", padding=10, spacing=10)
+        self.layout = FloatLayout()
 
-        self.image = Image(size_hint=(1, 0.5))
-        self.item_name = MDLabel(text="Item Name", halign="center", font_style="H5")
-        self.item_price = MDLabel(text="Price", halign="center", font_style="H6")
+        self.image = Image(size_hint=(None, None), size=(300, 300), pos_hint={'center_x': 0.5, 'center_y': 0.7})
+        self.item_name = MDLabel(text="Item Name", halign="center", font_style="H5", pos_hint={'center_x': 0.5, 'center_y': 0.45})
+        self.item_price = MDLabel(text="Price", halign="center", font_style="H6", pos_hint={'center_x': 0.5, 'center_y': 0.35})
 
         self.layout.add_widget(self.image)
         self.layout.add_widget(self.item_name)
@@ -23,14 +23,14 @@ class SelectedItemScreen(Screen):
 
         self.add_order_button = MDRaisedButton(
             text="Add to Order",
-            pos_hint={"center_x": 0.5},
+            pos_hint={"center_x": 0.5, "center_y": 0.2},
             on_release=self.confirm_add_to_order,
             md_bg_color=(0.2, 0.6, 0.2, 1)  # Green for add action
         )
 
         self.return_button = MDRaisedButton(
             text="Back to Menu",
-            pos_hint={"center_x": 0.5},
+            pos_hint={"center_x": 0.5, "center_y": 0.1},
             on_release=self.go_back,
             md_bg_color='white',
             text_color=(0.5, 0.25, 0, 1)
