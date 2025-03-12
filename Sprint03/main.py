@@ -42,13 +42,14 @@ class QuickEatsApp(MDApp):
         self.screen_manager.add_widget(self.submit_order_screen)
         self.screen_manager.add_widget(self.billing_screen)
         self.screen_manager.add_widget(self.admin_screen)
+
         self.init_main_screen()
 
         return self.screen_manager
 
     def init_main_screen(self):
         with self.main_screen.canvas.before:
-            Color(1, 1, 1, 0.3)
+            Color(1, 1, 1, 0.3)  # RGBA
             self.rect = Rectangle(size=self.main_screen.size, pos=self.main_screen.pos)
         self.main_screen.bind(size=self._update_rect, pos=self._update_rect)
 
@@ -261,6 +262,5 @@ class QuickEatsApp(MDApp):
     def quit_program(self, obj):
         print("Quit The Program")
         self.stop()
-
 
 QuickEatsApp().run()
