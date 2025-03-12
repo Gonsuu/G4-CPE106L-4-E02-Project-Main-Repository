@@ -5,14 +5,13 @@ from kivymd.uix.list import MDList, OneLineListItem
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
-from database import insert_order  # Import the database function
-from remove_item_screen import RemoveItemFromOrder
+from database import insert_order
 
 class OrderSummaryScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.orders = []  # Store current orders
-        self.customer_name = "Guest"  # Default value (can be updated later)
+        self.orders = []
+        self.customer_name = "Guest"
 
         self.layout = BoxLayout(orientation="vertical", padding=10, spacing=10)
         self.title = MDLabel(text="Order Summary", halign="center", font_style="H5")
@@ -26,21 +25,25 @@ class OrderSummaryScreen(Screen):
         self.submit_button = MDRaisedButton(
             text="Submit Order",
             pos_hint={"center_x": 0.5},
-            md_bg_color=(0.2, 0.6, 0.2, 1),
-            on_release=self.submit_order
+            on_release=self.submit_order,
+            md_bg_color='white',
+            text_color=(0.5, 0.25, 0, 1)
         )
 
         self.remove_button = MDRaisedButton(
             text="Remove Order",
             pos_hint={"center_x": 0.5},
-            md_bg_color=(0.2, 0.6, 0.2, 1),
-            on_release=self.remove_order
+            on_release=self.remove_order,
+            md_bg_color='white',
+            text_color=(0.5, 0.25, 0, 1)
         )
 
         self.return_button = MDRaisedButton(
             text="Back",
             pos_hint={"center_x": 0.5},
-            on_release=self.return_to_main
+            on_release=self.return_to_main,
+            md_bg_color='white',
+            text_color=(0.5, 0.25, 0, 1)
         )
 
         self.layout.add_widget(self.submit_button)
@@ -49,25 +52,21 @@ class OrderSummaryScreen(Screen):
         self.add_widget(self.layout)
 
     def set_orders(self, orders, customer_name="Guest"):
-        """Set the orders list and update the UI."""
         self.orders = orders
-        self.customer_name = customer_name  # Store customer name
+        self.customer_name = customer_name
         self.update_order_list()
 
     def add_item_to_order(self, item):
-        """Add a new item to the order list and update UI."""
         self.orders.append(item)
         self.update_order_list()
 
     def update_order_list(self):
-        """Refresh UI to display orders."""
         self.list_view.clear_widgets()
         for item in self.orders:
             order_item = OneLineListItem(text=f"{item['name']} - {item['price']}")
             self.list_view.add_widget(order_item)
 
     def submit_order(self, instance):
-        """Submit orders to the database."""
         if not self.orders:
             dialog = MDDialog(
                 title="Error",
@@ -80,15 +79,13 @@ class OrderSummaryScreen(Screen):
         for item in self.orders:
             item_name = item['name']
 
-            # Remove currency symbol and convert to float
             price_str = item['price'].replace('₱', '').strip()
             try:
-                price = float(price_str)  # Convert price string to float
+                price = float(price_str)
             except ValueError:
                 print(f"Invalid price format: {item['price']}")
-                continue  # Skip this item if conversion fails
+                continue
 
-            # Insert into the database
             insert_order(self.customer_name, item_name, price)
 
         success_dialog = MDDialog(
@@ -98,18 +95,17 @@ class OrderSummaryScreen(Screen):
         )
         success_dialog.open()
 
-        self.orders.clear()  # Clear orders after submission
-        self.update_order_list()  # Refresh UI
+        self.orders.clear()
+        self.update_order_list()
 
-        self.manager.current = "submit_order"  # Switch to next screen
+        self.manager.current = "submit_order"
 
     def remove_order(self, instance):
         remove_screen = self.manager.get_screen("remove_item")
-        remove_screen.set_orders(self.orders)  # Pass orders to remove screen
+        remove_screen.set_orders(self.orders)
         self.manager.current = "remove_item"
 
     def confirm_remove(self, item_instance):
-        """Remove the selected item from the list and update UI."""
         item_text = item_instance.text
         for item in self.orders:
             if f"{item['name']} - {item['price']}" == item_text:
@@ -119,7 +115,6 @@ class OrderSummaryScreen(Screen):
         self.update_order_list()
 
     def update_order_summary_from_remove(self, updated_orders):
-        """Update order summary when items are removed in RemoveItemFromOrder."""
         self.orders = updated_orders
         self.update_order_list()
 
