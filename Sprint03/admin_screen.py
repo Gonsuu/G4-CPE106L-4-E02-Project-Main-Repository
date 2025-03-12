@@ -6,26 +6,23 @@ from kivymd.uix.list import MDList, OneLineListItem
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
-from database import fetch_orders, update_order_status, delete_order  # Import DB functions
+from database import fetch_orders, update_order_status, delete_order 
 
 class AdminScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.orders = []  # Store current orders
+        self.orders = []
 
         self.layout = BoxLayout(orientation="vertical", padding=10, spacing=10)
 
-        # Title
         self.title = MDLabel(text="Admin Dashboard", halign="center", font_style="H5")
         self.layout.add_widget(self.title)
 
-        # Scrollable Order List
         self.scroll = ScrollView()
         self.list_view = MDList()
         self.scroll.add_widget(self.list_view)
         self.layout.add_widget(self.scroll)
 
-        # Action Buttons
         self.refresh_button = MDRaisedButton(
             text="Refresh Orders",
             pos_hint={"center_x": 0.5},
@@ -43,12 +40,11 @@ class AdminScreen(Screen):
         self.layout.add_widget(self.quit_button)
         self.add_widget(self.layout)
 
-        self.load_orders()  # Load orders on screen initialization
+        self.load_orders()
 
     def load_orders(self, *args):
-        """Fetch orders from the database and update the UI."""
-        self.list_view.clear_widgets()  # Clear previous orders
-        self.orders = fetch_orders()  # Fetch orders from DB
+        self.list_view.clear_widgets()
+        self.orders = fetch_orders() 
 
         if not self.orders:
             self.list_view.add_widget(OneLineListItem(text="No pending orders."))
@@ -60,7 +56,6 @@ class AdminScreen(Screen):
             self.list_view.add_widget(order_item)
 
     def show_order_options(self, order):
-        """Show dialog to update or remove an order."""
         dialog = MDDialog(
             title="Order Options",
             text=f"Customer: {order['customer_name']}\nItem: {order['item_name']}\nStatus: {order['status']}",
@@ -73,18 +68,15 @@ class AdminScreen(Screen):
         dialog.open()
 
     def mark_as_completed(self, order, dialog):
-        """Mark order as completed in the database."""
         update_order_status(order['order_id'], "Completed")
         dialog.dismiss()
         self.load_orders()
 
     def remove_order(self, order, dialog):
-        """Remove an order from the database."""
         delete_order(order['order_id'])
         dialog.dismiss()
         self.load_orders()
 
     def quit_program(self, instance):
-        # Quit the program
         app = MDApp.get_running_app()
         app.stop()
