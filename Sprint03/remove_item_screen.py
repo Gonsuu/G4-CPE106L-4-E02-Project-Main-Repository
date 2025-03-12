@@ -10,7 +10,7 @@ from database import insert_order
 class RemoveItemFromOrder(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.orders = []  # This will store order items
+        self.orders = []
 
         self.layout = BoxLayout(orientation="vertical", padding=10, spacing=10)
 
@@ -42,10 +42,9 @@ class RemoveItemFromOrder(Screen):
         self.add_widget(self.layout)
 
     def submit_order(self, instance):
-        """Submit orders to the database."""
         if not self.orders:
             dialog = MDDialog(
-                title="Notice!",
+                title="Error",
                 text="No orders to submit.",
                 buttons=[MDRaisedButton(text="OK", on_release=lambda x: dialog.dismiss())]
             )
@@ -55,15 +54,13 @@ class RemoveItemFromOrder(Screen):
         for item in self.orders:
             item_name = item['name']
 
-            # Remove currency symbol and convert to float
             price_str = item['price'].replace('₱', '').strip()
             try:
-                price = float(price_str)  # Convert price string to float
+                price = float(price_str)
             except ValueError:
                 print(f"Invalid price format: {item['price']}")
-                continue  # Skip this item if conversion fails
+                continue
 
-            # Insert into the database
             insert_order(item_name, price)
 
         dialog = MDDialog(
@@ -73,18 +70,16 @@ class RemoveItemFromOrder(Screen):
         )
         dialog.open()
 
-        self.orders.clear()  # Clear orders after submission
-        self.update_order_list()  # Refresh UI
+        self.orders.clear()
+        self.update_order_list()
 
-        self.manager.current = "submit_order"  # Switch to next screen
+        self.manager.current = "submit_order"
 
     def set_orders(self, orders):
-        """ Receive the order list and update UI """
         self.orders = orders
         self.update_order_summary()
 
     def update_order_summary(self):
-        """ Refresh UI with current order """
         self.list_view.clear_widgets()
         for item in self.orders:
             order_item = OneLineListItem(
@@ -94,25 +89,19 @@ class RemoveItemFromOrder(Screen):
             self.list_view.add_widget(order_item)
 
     def remove_selected_item(self, item):
-        """Remove the selected item and update both screens."""
         if item in self.orders:
             self.orders.remove(item)
             self.update_order_summary()
 
-            # Update OrderSummaryScreen safely
             order_summary_screen = self.manager.get_screen('order_summary')
             if hasattr(order_summary_screen, 'update_order_summary_from_remove'):
                 order_summary_screen.update_order_summary_from_remove(self.orders)
 
     def return_to_summary(self, instance):
-        """ Go back to Order Summary screen """
         self.manager.current = 'order_summary'
 
     def return_to_main(self, instance):
-        """Finalize order and return to the main screen."""
-        # Update OrderSummaryScreen before switching back
         order_summary_screen = self.manager.get_screen("order_summary")
         order_summary_screen.update_order_summary_from_remove(self.orders)
 
-        # Return to main screen
         self.manager.current = "main"
