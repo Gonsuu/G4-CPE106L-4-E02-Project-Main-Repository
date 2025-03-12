@@ -6,7 +6,6 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
 
-
 class SubmitOrderScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -39,19 +38,16 @@ class SubmitOrderScreen(Screen):
         self.add_widget(self.layout)
 
     def set_orders(self, orders):
-        """Set the orders list and update the UI."""
         self.orders = orders
         self.update_order_list()
 
     def update_order_list(self):
-        """Refresh UI to display orders."""
         self.list_view.clear_widgets()
         for item in self.orders:
             order_item = OneLineListItem(text=f"{item['name']} - {item['price']}")
             self.list_view.add_widget(order_item)
 
     def confirm_order(self, instance):
-        """Show confirmation message (but do nothing else)."""
         dialog = MDDialog(
             title="Order Confirmation",
             text="Order submitted successfully!",
@@ -61,4 +57,3 @@ class SubmitOrderScreen(Screen):
 
     def return_to_main(self, instance):
         self.manager.current = "main"
-
