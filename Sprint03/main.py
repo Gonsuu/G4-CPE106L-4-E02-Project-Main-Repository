@@ -4,13 +4,14 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivy.uix.image import Image
-from kivymd.uix.list import TwoLineAvatarListItem, ImageLeftWidget
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDRaisedButton
+from kivy.graphics import Rectangle, Color
+import os
 
 # local modules
-from instructionscrap import create_instructions2
+from Instructionscrap import create_instructions2
 from helpers import customer_helper
 from helpers import admin_helper
 from menu_module import MenuScreen
@@ -49,15 +50,27 @@ class QuickEatsApp(MDApp):
         return self.screen_manager
 
     def init_main_screen(self):
+        with self.main_screen.canvas.before:
+            Color(1, 1, 1, 0.3)  # RGBA
+            self.rect = Rectangle(size=self.main_screen.size, pos=self.main_screen.pos)
+        self.main_screen.bind(size=self._update_rect, pos=self._update_rect)
+
         # Create top box for logo and app name
         top_box = RelativeLayout(
             size_hint=(1, 0.2),
             pos_hint={'center_x': 0.5, 'top': 1},
         )
 
+        # image path
+        base_dir = os.path.dirname(__file__)
+        image_dir = os.path.join(base_dir, "Image")
+        logo_filename = "QELogo.jpg"
+        logo_path = os.path.join(image_dir, logo_filename)
+
+
         # Add the image
         logo = Image(
-            source='C:/Users/Axel Lulu/Desktop/Quick Eats/image/QELogo.jpg',
+            source=logo_path,
             size_hint=(None, None),
             size=(300, 300),
             pos_hint={'center_x': 0.5, 'center_y': 0}
@@ -75,33 +88,28 @@ class QuickEatsApp(MDApp):
             text='Enter Admin', pos_hint={'center_x': 0.5, 'center_y': 0.6},
             on_release=self.enter_admin_role,
             theme_text_color="Custom",
-            md_bg_color=(1, 0, 0, 1),
-            text_color=(1, 1, 1, 1)
+            md_bg_color='white',
+            text_color=(0.5, 0.25, 0, 1)
         )
         self.customer_button = MDRaisedButton(
             text='Enter Customer', pos_hint={'center_x': 0.5, 'center_y': 0.3},
             on_release=self.enter_customer_role,
             theme_text_color="Custom",
-            md_bg_color=(1, 0, 0, 1),
-            text_color=(1, 1, 1, 1)
-        )
-
-        self.info_button = MDRaisedButton(
-            text='Information', pos_hint={'center_x': 0.5, 'center_y': 0},
-            on_release=self.enter_info_role,
-            theme_text_color="Custom",
-            md_bg_color=(1, 0, 0, 1),
-            text_color=(1, 1, 1, 1)
+            md_bg_color='white',
+            text_color=(0.5, 0.25, 0, 1)
         )
 
         # Add buttons to button_box
         self.button_box.add_widget(self.admin_button)
         self.button_box.add_widget(self.customer_button)
-        self.button_box.add_widget(self.info_button)
 
         # Add to main screen
         self.main_screen.add_widget(top_box)
         self.main_screen.add_widget(self.button_box)
+
+    def _update_rect(self, *args):
+        self.rect.pos = self.main_screen.pos
+        self.rect.size = self.main_screen.size
 
     def enter_admin_role(self, obj):
         self.enter_role(obj, role='admin')
