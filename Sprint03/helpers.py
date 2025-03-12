@@ -4,7 +4,7 @@ BoxLayout:
     spacing: dp(5)
     size_hint_y: None
     height: self.minimum_height
-    pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+    pos_hint: {'center_x': 0.5, 'center_y': 0.4}
     size_hint_x: None
     width: 300
 
@@ -35,7 +35,7 @@ BoxLayout:
     spacing: dp(10)
     size_hint_y: None
     height: self.minimum_height
-    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    pos_hint: {'center_x': 0.5, 'center_y': 0.4}
     size_hint_x: None
     width: 300
 
